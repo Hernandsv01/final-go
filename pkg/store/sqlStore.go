@@ -34,6 +34,31 @@ func (s *dentistaSqlStore) Create(d domain.Dentista) error {
 }
 
 // Read devuelve un Dentista por su id
+func (s *dentistaSqlStore) ReadAll() ([]domain.Dentista, error) {
+	var dentistasList []domain.Dentista
+
+	rows, err := s.db.Query("SELECT * FROM dentista")
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+        var matricula int
+        var apellido string
+        var nombre string
+
+        err = rows.Scan(&matricula, &apellido, &nombre)
+        if err != nil {
+            panic(err.Error())
+        }
+
+		dentistasList = append(dentistasList, domain.Dentista{Matricula: matricula, Apellido: apellido, Nombre: nombre})
+    }
+
+	return dentistasList, nil
+}
+
+// Read devuelve un Dentista por su id
 func (s *dentistaSqlStore) Read(id int) (domain.Dentista, error) {
 	return domain.Dentista{}, nil
 }
