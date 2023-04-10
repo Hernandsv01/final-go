@@ -1,7 +1,10 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/Hernandsv01/final-go.git/internal/dentista"
+	"github.com/Hernandsv01/final-go.git/internal/domain"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,7 +29,14 @@ func NewDentistaHandler(s dentista.Service) *dentistaHandler {
 
 func (h *dentistaHandler) Create() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		var d domain.Dentista
+
+		if err := c.ShouldBindJSON(&d); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		h.s.Create(d)
 	}
 }
 

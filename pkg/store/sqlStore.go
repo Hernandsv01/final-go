@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+	"strconv"
 
 	"github.com/Hernandsv01/final-go.git/internal/domain"
 )
@@ -17,18 +18,24 @@ func NewDentistaSqlStore(db *sql.DB) DentistaStoreInterface {
 }
 
 
+// Create agrega un nuevo Dentista
+func (s *dentistaSqlStore) Create(d domain.Dentista) error {
+ 	st, err := s.db.Prepare("INSERT INTO dentista(matricula, apellido, nombre) VALUES (?, ?, ?)")
+	if err != nil {
+		
+	}
+	_, err = st.Exec(strconv.Itoa(d.Matricula), d.Apellido, d.Nombre)
+
+	return nil
+}
+
 // Read devuelve un Dentista por su id
 func (s *dentistaSqlStore) Read(id int) (domain.Dentista, error) {
 	return domain.Dentista{}, nil
 }
 
-// Create agrega un nuevo Dentista
-func (s *dentistaSqlStore) Create(product domain.Dentista) error {
- 	return nil
-}
-
 // Update actualiza un Dentista
-func (s *dentistaSqlStore) Update(product domain.Dentista) error {
+func (s *dentistaSqlStore) Update(d domain.Dentista) error {
 	return nil
 }
 
