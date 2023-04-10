@@ -36,7 +36,18 @@ func (h *dentistaHandler) Create() gin.HandlerFunc {
 			return
 		}
 
-		h.s.Create(d)
+		d, err := h.s.Create(d)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusCreated, d)
+	}
+}
+
+func (h *dentistaHandler) GetAll() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		
 	}
 }
 
@@ -59,12 +70,6 @@ func (h *dentistaHandler) Patch() gin.HandlerFunc {
 }
 
 func (h *dentistaHandler) Delete() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		
-	}
-}
-
-func (h *dentistaHandler) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		
 	}

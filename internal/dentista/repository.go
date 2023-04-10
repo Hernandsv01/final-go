@@ -20,6 +20,10 @@ func NewRepository(storage store.DentistaStoreInterface) Repository {
 
 // Create agrega un nuevo producto
 func (r *repository) Create(d domain.Dentista) (domain.Dentista, error) {
-	r.storage.Create(d)
+	err := r.storage.Create(d)
+	if err != nil {
+		return domain.Dentista{}, err
+	}
+
 	return d, nil
 }

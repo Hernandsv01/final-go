@@ -22,10 +22,14 @@ func NewDentistaSqlStore(db *sql.DB) DentistaStoreInterface {
 func (s *dentistaSqlStore) Create(d domain.Dentista) error {
  	st, err := s.db.Prepare("INSERT INTO dentista(matricula, apellido, nombre) VALUES (?, ?, ?)")
 	if err != nil {
-		
+		return err
 	}
 	_, err = st.Exec(strconv.Itoa(d.Matricula), d.Apellido, d.Nombre)
+	if err != nil {
+		return err
+	}
 
+	st.Close()
 	return nil
 }
 

@@ -27,13 +27,13 @@ func main() {
 	// pacienteHandler := handler.NewPacienteHandler(paciente.NewService(paciente.NewRepository(store.NewSqlStore(db))))
 	// turnoHandler := handler.NewTurnoHandler(turno.NewService(turno.NewRepository(store.NewSqlStore(db))))
 
+	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 	products := r.Group("/dentistas")
 	{
+		products.POST("", dentistaHandler.Create())
 		// products.GET("", dentistaHandler.GetAll())
 		// products.GET(":id", dentistaHandler.GetByID())
 		// products.GET("/search", dentistaHandler.Search())
-		// products.POST("", dentistaHandler.Post())
-		products.GET("/test", dentistaHandler.Create())
 	}
 
 
