@@ -6,6 +6,7 @@ import (
 
 type Service interface {
 	Create(d domain.Dentista) (domain.Dentista, error)
+	ReadAll() []domain.Dentista
 }
 
 type service struct {
@@ -24,6 +25,9 @@ func (s *service) Create(d domain.Dentista) (domain.Dentista, error) {
 	return p, nil
 }
 
+func (s *service) ReadAll() []domain.Dentista {
+	return s.r.GetAll()
+}
 /*
 POST: agregar dentista.
 GET: traer dentista por ID.

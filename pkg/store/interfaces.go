@@ -5,6 +5,8 @@ import "github.com/Hernandsv01/final-go.git/internal/domain"
 type DentistaStoreInterface interface {
 	// Read devuelve un Dentista por su id
 	Read(id int) (domain.Dentista, error)
+	// Read devuelve un Dentista por su id
+	ReadAll() ([]domain.Dentista, error)
 	// Create agrega un nuevo Dentista
 	Create(product domain.Dentista) error
 	// Update actualiza un Dentista

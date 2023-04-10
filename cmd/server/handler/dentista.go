@@ -47,7 +47,8 @@ func (h *dentistaHandler) Create() gin.HandlerFunc {
 
 func (h *dentistaHandler) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		res := h.s.ReadAll()
+		c.JSON(200, res)
 	}
 }
 
