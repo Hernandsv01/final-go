@@ -34,7 +34,7 @@ func (s *dentistaSqlStore) Create(d domain.Dentista) error {
 	return nil
 }
 
-// Read devuelve un Dentista por su id
+// Read devuelve una lista con todos los Dentistas
 func (s *dentistaSqlStore) ReadAll() ([]domain.Dentista, error) {
 	var dentistasList []domain.Dentista
 

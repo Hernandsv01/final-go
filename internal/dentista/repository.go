@@ -23,7 +23,6 @@ func NewRepository(storage store.DentistaStoreInterface) Repository {
 	return &repository{storage}
 }
 
-// Create agrega un nuevo producto
 func (r *repository) Create(d domain.Dentista) (domain.Dentista, error) {
 	err := r.storage.Create(d)
 	if err != nil {
@@ -62,13 +61,3 @@ func (r *repository) Patch(d domain.Dentista) error {
 func (r *repository) Delete(matricula int) error {
 	return r.storage.Delete(matricula)
 }
-
-
-
-/*
-POST: agregar dentista.
-GET: traer dentista por ID.
-PUT: actualizar dentista.
-PATCH: actualizar un dentista por alguno de sus campos.
-DELETE: eliminar dentista.
-*/

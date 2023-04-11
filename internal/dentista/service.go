@@ -11,8 +11,6 @@ type Service interface {
 	Create(d domain.Dentista) (domain.Dentista, error)
 	ReadAll() []domain.Dentista
 	Read(matricula int) (domain.Dentista, error)
-	// Put(matricula string, d domain.Dentista) error
-	// Patch(matricula string, d domain.Dentista) error
 	Update(matricula string, d domain.Dentista, functionType string) error
 	Delete(matricula int) error
 }
@@ -41,26 +39,6 @@ func (s *service) Read(matricula int) (domain.Dentista, error) {
 	return s.r.Get(matricula)
 }
 
-// func (s *service) Put(matricula string, d domain.Dentista) error {
-// 	matInt, err := strconv.Atoi(matricula)
-// 	if err != nil { 
-// 		return err
-// 	}
-// 	d.Matricula = matInt
-// 	err = s.r.Put(d)
-// 	return err
-// }
-
-// func (s *service) Patch(matricula string, d domain.Dentista) error {
-// 	matInt, err := strconv.Atoi(matricula)
-// 	if err != nil { 
-// 		return err
-// 	}
-// 	d.Matricula = matInt
-// 	err = s.r.Patch(d)
-// 	return err
-// }
-
 func (s *service) Update(matricula string, d domain.Dentista, functionType string) error {
 	matInt, err := strconv.Atoi(matricula)
 	if err != nil { 
@@ -81,11 +59,3 @@ func (s *service) Delete(matricula int) error {
 	err := s.r.Delete(matricula)
 	return err
 }
-
-/*
-POST: agregar dentista.
-GET: traer dentista por ID.
-PUT: actualizar dentista.
-PATCH: actualizar un dentista por alguno de sus campos.
-DELETE: eliminar dentista.
-*/
