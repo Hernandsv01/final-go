@@ -1,6 +1,7 @@
 package dentista
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/Hernandsv01/final-go.git/internal/domain"
@@ -10,8 +11,9 @@ type Service interface {
 	Create(d domain.Dentista) (domain.Dentista, error)
 	ReadAll() []domain.Dentista
 	Read(matricula int) (domain.Dentista, error)
-	Put(matricula string, d domain.Dentista) error
-	Patch(matricula string, d domain.Dentista) error
+	// Put(matricula string, d domain.Dentista) error
+	// Patch(matricula string, d domain.Dentista) error
+	Update(matricula string, d domain.Dentista, functionType string) error
 	Delete(matricula int) error
 }
 
@@ -39,24 +41,40 @@ func (s *service) Read(matricula int) (domain.Dentista, error) {
 	return s.r.Get(matricula)
 }
 
-func (s *service) Put(matricula string, d domain.Dentista) error {
-	matInt, err := strconv.Atoi(matricula)
-	if err != nil { 
-		return err
-	}
-	d.Matricula = matInt
-	err = s.r.Put(d)
-	return err
-}
+// func (s *service) Put(matricula string, d domain.Dentista) error {
+// 	matInt, err := strconv.Atoi(matricula)
+// 	if err != nil { 
+// 		return err
+// 	}
+// 	d.Matricula = matInt
+// 	err = s.r.Put(d)
+// 	return err
+// }
 
-func (s *service) Patch(matricula string, d domain.Dentista) error {
+// func (s *service) Patch(matricula string, d domain.Dentista) error {
+// 	matInt, err := strconv.Atoi(matricula)
+// 	if err != nil { 
+// 		return err
+// 	}
+// 	d.Matricula = matInt
+// 	err = s.r.Patch(d)
+// 	return err
+// }
+
+func (s *service) Update(matricula string, d domain.Dentista, functionType string) error {
 	matInt, err := strconv.Atoi(matricula)
 	if err != nil { 
 		return err
 	}
 	d.Matricula = matInt
-	err = s.r.Patch(d)
-	return err
+
+	if functionType == "put" {
+		return s.r.Put(d)
+	}else if functionType == "patch" {
+		return s.r.Patch(d)
+	} else {
+		return fmt.Errorf("Something went VERY wrong, contact developer")
+	}
 }
 
 func (s *service) Delete(matricula int) error {

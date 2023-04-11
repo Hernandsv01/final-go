@@ -33,9 +33,9 @@ func main() {
 		products.POST("", dentistaHandler.Create())
 		products.GET("", dentistaHandler.GetAll())
 		products.GET(":matricula", dentistaHandler.GetByMatricula())
-		products.PUT(":matricula", dentistaHandler.Put())
+		products.PUT(":matricula", dentistaHandler.Update("put"))
+		products.PATCH(":matricula", dentistaHandler.Update("patch"))
 
-		products.PATCH(":matricula", dentistaHandler.Patch())
 		products.DELETE(":matricula", dentistaHandler.Delete())
 	}
 

@@ -105,20 +105,27 @@ func (s *dentistaSqlStore) Update(d domain.Dentista) error {
 		return fmt.Errorf("New dentista is empty")
 	}
 
-	statement := "UPDATE dentista SET "
+	/*
+	  Apellido y nombre fueron puestos así porque
+	  no se me ocurría forma de meterlos en el exec condicionalmente
+	  sin tener que agregar 20 lineas mas
+	*/
+	statement := "UPDATE dentista SET"
 	if d.Apellido != "" {
-		statement += "apellido=? "
+		statement += " apellido=\"" + d.Apellido + "\""
 	}
 	if d.Nombre != "" {
-		statement += "nombre=? "
+		statement += " nombre=\"" + d.Nombre + "\""
 	}
-	statement += "WHERE matricula=?"
+	statement += " WHERE matricula=?"
+
+	fmt.Println("Executed statement:", statement)
 
 	st, err := s.db.Prepare(statement)
 	if err != nil {
 		return err
 	}
-	res, err := st.Exec(d.Apellido, d.Nombre, strconv.Itoa(d.Matricula))
+	res, err := st.Exec(strconv.Itoa(d.Matricula))
 	if err != nil {
 		return err
 	}

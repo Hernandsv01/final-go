@@ -71,44 +71,7 @@ func (h *dentistaHandler) GetByMatricula() gin.HandlerFunc {
 	}
 }
 
-func (h *dentistaHandler) Put() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var d domain.Dentista
-		if err := c.ShouldBindJSON(&d); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		matricula := c.Param("matricula")
-
-		err := h.s.Put(matricula, d)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		}
-
-		c.JSON(http.StatusOK, "Dentista updated succesfully")
-	}
-}
-
-func (h *dentistaHandler) Patch() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var d domain.Dentista
-		if err := c.ShouldBindJSON(&d); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		matricula := c.Param("matricula")
-
-		err := h.s.Patch(matricula, d)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		}
-
-		c.JSON(http.StatusOK, "Dentista updated succesfully")
-	}
-}
-
-// func (h *dentistaHandler) Update(fn func(string, domain.Dentista) error) gin.HandlerFunc {
-	
+// func (h *dentistaHandler) Put() gin.HandlerFunc {
 // 	return func(c *gin.Context) {
 // 		var d domain.Dentista
 // 		if err := c.ShouldBindJSON(&d); err != nil {
@@ -117,7 +80,7 @@ func (h *dentistaHandler) Patch() gin.HandlerFunc {
 // 		}
 // 		matricula := c.Param("matricula")
 
-// 		err := fn(matricula, d)
+// 		err := h.s.Put(matricula, d)
 // 		if err != nil {
 // 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 // 		}
@@ -125,6 +88,44 @@ func (h *dentistaHandler) Patch() gin.HandlerFunc {
 // 		c.JSON(http.StatusOK, "Dentista updated succesfully")
 // 	}
 // }
+
+// func (h *dentistaHandler) Patch() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		var d domain.Dentista
+// 		if err := c.ShouldBindJSON(&d); err != nil {
+// 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 			return
+// 		}
+// 		matricula := c.Param("matricula")
+
+// 		err := h.s.Patch(matricula, d)
+// 		if err != nil {
+// 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		}
+
+// 		c.JSON(http.StatusOK, "Dentista updated succesfully")
+// 	}
+// }
+
+func (h *dentistaHandler) Update(functionType string) gin.HandlerFunc {
+	
+	return func(c *gin.Context) {
+		var d domain.Dentista
+		if err := c.ShouldBindJSON(&d); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		matricula := c.Param("matricula")
+
+		err := h.s.Update(matricula, d, functionType)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, "Dentista updated succesfully")
+	}
+}
 
 func (h *dentistaHandler) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
