@@ -1,6 +1,8 @@
 package dentista
 
 import (
+	"strconv"
+
 	"github.com/Hernandsv01/final-go.git/internal/domain"
 )
 
@@ -8,6 +10,9 @@ type Service interface {
 	Create(d domain.Dentista) (domain.Dentista, error)
 	ReadAll() []domain.Dentista
 	Read(matricula int) (domain.Dentista, error)
+	Put(matricula string, d domain.Dentista) error
+	Patch(matricula string, d domain.Dentista) error
+	Delete(matricula int) error
 }
 
 type service struct {
@@ -33,6 +38,32 @@ func (s *service) ReadAll() []domain.Dentista {
 func (s *service) Read(matricula int) (domain.Dentista, error) {
 	return s.r.Get(matricula)
 }
+
+func (s *service) Put(matricula string, d domain.Dentista) error {
+	matInt, err := strconv.Atoi(matricula)
+	if err != nil { 
+		return err
+	}
+	d.Matricula = matInt
+	err = s.r.Put(d)
+	return err
+}
+
+func (s *service) Patch(matricula string, d domain.Dentista) error {
+	matInt, err := strconv.Atoi(matricula)
+	if err != nil { 
+		return err
+	}
+	d.Matricula = matInt
+	err = s.r.Patch(d)
+	return err
+}
+
+func (s *service) Delete(matricula int) error {
+	err := s.r.Delete(matricula)
+	return err
+}
+
 /*
 POST: agregar dentista.
 GET: traer dentista por ID.

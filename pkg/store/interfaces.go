@@ -11,10 +11,12 @@ type DentistaStoreInterface interface {
 	Create(product domain.Dentista) error
 	// Update actualiza un Dentista
 	Update(product domain.Dentista) error
+	// Update actualiza un Dentista en su totalidad
+	UpdateFull(product domain.Dentista) error
 	// Delete elimina un Dentista
 	Delete(id int) error
 	// Exists verifica si un Dentista existe
-	Exists(codeValue string) bool
+	// Exists(codeValue string) bool
 }
 
 type PacienteStoreInterface interface {

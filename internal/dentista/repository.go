@@ -6,9 +6,12 @@ import (
 )
 
 type Repository interface {
-	Create(p domain.Dentista) (domain.Dentista, error)
+	Create(d domain.Dentista) (domain.Dentista, error)
 	GetAll() []domain.Dentista
 	Get(matricula int) (domain.Dentista, error)
+	Patch(d domain.Dentista) error
+	Put(d domain.Dentista) error
+	Delete(matricula int) error
 }
 
 type repository struct {
@@ -47,3 +50,25 @@ func (r *repository) Get(matricula int) (domain.Dentista, error) {
 
 	return res, nil
 }
+
+func (r *repository) Put(d domain.Dentista) error {
+	return r.storage.UpdateFull(d)
+}
+
+func (r *repository) Patch(d domain.Dentista) error {
+	return r.storage.Update(d)
+}
+
+func (r *repository) Delete(matricula int) error {
+	return r.storage.Delete(matricula)
+}
+
+
+
+/*
+POST: agregar dentista.
+GET: traer dentista por ID.
+PUT: actualizar dentista.
+PATCH: actualizar un dentista por alguno de sus campos.
+DELETE: eliminar dentista.
+*/

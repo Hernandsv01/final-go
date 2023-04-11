@@ -80,17 +80,77 @@ func (s *dentistaSqlStore) Read(matricula int) (domain.Dentista, error) {
 	}
 }
 
+// Update actualiza un Dentista en su totalidad
+func (s *dentistaSqlStore) UpdateFull(d domain.Dentista) error {
+	st, err := s.db.Prepare("UPDATE dentista SET apellido=?, nombre=? WHERE matricula=?")
+   if err != nil {
+	   return err
+   }
+   res, err := st.Exec(d.Apellido, d.Nombre, strconv.Itoa(d.Matricula))
+   if err != nil {
+	   return err
+   }
+	rowsAff, _ := res.RowsAffected()
+	if rowsAff == 0 {
+		return fmt.Errorf("No dentista with that matricula was found")
+	}
+
+   st.Close()
+   return nil
+}
+
 // Update actualiza un Dentista
 func (s *dentistaSqlStore) Update(d domain.Dentista) error {
-	return nil
+	if d.Apellido == "" && d.Nombre == "" {
+		return fmt.Errorf("New dentista is empty")
+	}
+
+	statement := "UPDATE dentista SET "
+	if d.Apellido != "" {
+		statement += "apellido=? "
+	}
+	if d.Nombre != "" {
+		statement += "nombre=? "
+	}
+	statement += "WHERE matricula=?"
+
+	st, err := s.db.Prepare(statement)
+	if err != nil {
+		return err
+	}
+	res, err := st.Exec(d.Apellido, d.Nombre, strconv.Itoa(d.Matricula))
+	if err != nil {
+		return err
+	}
+	rowsAff, _ := res.RowsAffected()
+	if rowsAff == 0 {
+		return fmt.Errorf("No dentista with that matricula was found")
+	}
+
+   st.Close()
+   return nil
 }
 
 // Delete elimina un Dentista
-func (s *dentistaSqlStore) Delete(id int) error {
-	return nil
+func (s *dentistaSqlStore) Delete(matricula int) error {	
+	st, err := s.db.Prepare("DELETE FROM dentista WHERE matricula=?")
+	if err != nil {
+		return err
+	}
+	res, err := st.Exec(strconv.Itoa(matricula))
+	if err != nil {
+		return err
+	}
+	rowsAff, _ := res.RowsAffected()
+	if rowsAff == 0 {
+		return fmt.Errorf("No dentista with that matricula was found")
+	}
+
+   st.Close()
+   return nil
 }
 
 // Exists verifica si un Dentista existe
-func (s *dentistaSqlStore) Exists(codeValue string) bool {
-	return true
-}
+// func (s *dentistaSqlStore) Exists(matricula string) bool {
+// 	return true
+// }
