@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Hernandsv01/final-go.git/internal/dentista"
 	"github.com/Hernandsv01/final-go.git/internal/domain"
@@ -52,9 +53,20 @@ func (h *dentistaHandler) GetAll() gin.HandlerFunc {
 	}
 }
 
-func (h *dentistaHandler) GetById() gin.HandlerFunc {
+func (h *dentistaHandler) GetByMatricula() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		matricula, err := strconv.Atoi(c.Param("matricula"))
+		if err != nil {
+			c.JSON(400, gin.H{"error": "Invalid matricula"})
+			return
+		}
+		res, err := h.s.Read(matricula)
+		if err != nil {
+			c.JSON(404, gin.H{"error": "The specified matricula could not be found"})
+		}
+
+		c.JSON(200, res)
+
 	}
 }
 

@@ -32,7 +32,7 @@ func main() {
 	{
 		products.POST("", dentistaHandler.Create())
 		products.GET("", dentistaHandler.GetAll())
-		// products.GET(":id", dentistaHandler.GetByID())
+		products.GET(":matricula", dentistaHandler.GetByMatricula())
 		// products.GET("/search", dentistaHandler.Search())
 	}
 

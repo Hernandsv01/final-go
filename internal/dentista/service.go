@@ -7,6 +7,7 @@ import (
 type Service interface {
 	Create(d domain.Dentista) (domain.Dentista, error)
 	ReadAll() []domain.Dentista
+	Read(matricula int) (domain.Dentista, error)
 }
 
 type service struct {
@@ -27,6 +28,10 @@ func (s *service) Create(d domain.Dentista) (domain.Dentista, error) {
 
 func (s *service) ReadAll() []domain.Dentista {
 	return s.r.GetAll()
+}
+
+func (s *service) Read(matricula int) (domain.Dentista, error) {
+	return s.r.Get(matricula)
 }
 /*
 POST: agregar dentista.

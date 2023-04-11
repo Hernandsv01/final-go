@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+	"fmt"
 	"strconv"
 
 	"github.com/Hernandsv01/final-go.git/internal/domain"
@@ -49,7 +50,7 @@ func (s *dentistaSqlStore) ReadAll() ([]domain.Dentista, error) {
 
         err = rows.Scan(&matricula, &apellido, &nombre)
         if err != nil {
-            panic(err.Error())
+            fmt.Println(err.Error())
         }
 
 		dentistasList = append(dentistasList, domain.Dentista{Matricula: matricula, Apellido: apellido, Nombre: nombre})
@@ -59,8 +60,24 @@ func (s *dentistaSqlStore) ReadAll() ([]domain.Dentista, error) {
 }
 
 // Read devuelve un Dentista por su id
-func (s *dentistaSqlStore) Read(id int) (domain.Dentista, error) {
-	return domain.Dentista{}, nil
+func (s *dentistaSqlStore) Read(matricula int) (domain.Dentista, error) {
+	rows, err := s.db.Query("SELECT * FROM dentista WHERE matricula = " + strconv.Itoa(matricula))
+	if err != nil {
+		return domain.Dentista{}, err
+	}
+	
+	var dentistaRes domain.Dentista
+	if rows.Next() {
+
+        err = rows.Scan(&dentistaRes.Matricula, &dentistaRes.Apellido, &dentistaRes.Nombre)
+        if err != nil {
+            fmt.Println(err.Error())
+        }
+
+		return dentistaRes, nil
+    } else {
+		return dentistaRes, fmt.Errorf("Dentista not found: matricula=%d", matricula)
+	}
 }
 
 // Update actualiza un Dentista

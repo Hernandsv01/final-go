@@ -5,7 +5,7 @@ import "github.com/Hernandsv01/final-go.git/internal/domain"
 type DentistaStoreInterface interface {
 	// Read devuelve un Dentista por su id
 	Read(id int) (domain.Dentista, error)
-	// Read devuelve un Dentista por su id
+	// Readall devuelve una lista con todos los dentistas
 	ReadAll() ([]domain.Dentista, error)
 	// Create agrega un nuevo Dentista
 	Create(product domain.Dentista) error
@@ -20,19 +20,23 @@ type DentistaStoreInterface interface {
 type PacienteStoreInterface interface {
 	// Read devuelve un Paciente por su id
 	Read(id int) (domain.Paciente, error)
+	// Readall devuelve una lista con todos los Pacientes
+	ReadAll() ([]domain.Paciente, error)
 	// Create agrega un nuevo Paciente
 	Create(product domain.Paciente) error
 	// Update actualiza un Paciente
 	Update(product domain.Paciente) error
 	// Delete elimina un Paciente
 	Delete(id int) error
-	// Exists verifica si un dentista existe
+	// Exists verifica si un Paciente existe
 	Exists(codeValue string) bool
 }
 
 type TurnoStoreInterface interface {
 	// Read devuelve un Turno por su id
 	Read(id int) (domain.Turno, error)
+	// Readall devuelve una lista con todos los Turnos
+	ReadAll() ([]domain.Turno, error)
 	// Create agrega un nuevo Turno
 	Create(product domain.Turno) error
 	// Update actualiza un Turno

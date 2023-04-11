@@ -8,6 +8,7 @@ import (
 type Repository interface {
 	Create(p domain.Dentista) (domain.Dentista, error)
 	GetAll() []domain.Dentista
+	Get(matricula int) (domain.Dentista, error)
 }
 
 type repository struct {
@@ -36,4 +37,13 @@ func (r *repository) GetAll() []domain.Dentista {
 	}
 
 	return resList
+}
+
+func (r *repository) Get(matricula int) (domain.Dentista, error) {
+	res, err := r.storage.Read(matricula)
+	if err != nil {
+		return domain.Dentista{}, err
+	}
+
+	return res, nil
 }
