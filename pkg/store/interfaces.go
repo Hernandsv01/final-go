@@ -28,10 +28,12 @@ type PacienteStoreInterface interface {
 	Create(product domain.Paciente) error
 	// Update actualiza un Paciente
 	Update(product domain.Paciente) error
+	// Update actualiza un Dentista en su totalidad
+	UpdateFull(product domain.Paciente) error
 	// Delete elimina un Paciente
 	Delete(id int) error
 	// Exists verifica si un Paciente existe
-	Exists(codeValue string) bool
+	// Exists(codeValue string) bool
 }
 
 type TurnoStoreInterface interface {

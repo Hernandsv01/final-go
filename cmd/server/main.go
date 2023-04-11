@@ -6,6 +6,7 @@ import (
 
 	"github.com/Hernandsv01/final-go.git/cmd/server/handler"
 	"github.com/Hernandsv01/final-go.git/internal/dentista"
+	"github.com/Hernandsv01/final-go.git/internal/paciente"
 	"github.com/Hernandsv01/final-go.git/pkg/store"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -24,19 +25,27 @@ func main() {
 	r := gin.Default()
 
 	dentistaHandler := handler.NewDentistaHandler(dentista.NewService(dentista.NewRepository(store.NewDentistaSqlStore(db))))
-	// pacienteHandler := handler.NewPacienteHandler(paciente.NewService(paciente.NewRepository(store.NewSqlStore(db))))
-	// turnoHandler := handler.NewTurnoHandler(turno.NewService(turno.NewRepository(store.NewSqlStore(db))))
+	pacienteHandler := handler.NewPacienteHandler(paciente.NewService(paciente.NewRepository(store.NewPacienteSqlStore(db))))
+	// turnoHandler := handler.NewTurnoHandler(turno.NewService(turno.NewRepository(store.NewTurnoSqlStore(db))))
 
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
-	products := r.Group("/dentistas")
+	dentistas := r.Group("/dentistas")
 	{
-		products.POST("", dentistaHandler.Create())
-		products.GET("", dentistaHandler.GetAll())
-		products.GET(":matricula", dentistaHandler.GetByMatricula())
-		products.PUT(":matricula", dentistaHandler.Update("put"))
-		products.PATCH(":matricula", dentistaHandler.Update("patch"))
-
-		products.DELETE(":matricula", dentistaHandler.Delete())
+		dentistas.POST("", dentistaHandler.Create())
+		dentistas.GET("", dentistaHandler.GetAll())
+		dentistas.GET(":matricula", dentistaHandler.GetByMatricula())
+		dentistas.PUT(":matricula", dentistaHandler.Update("put"))
+		dentistas.PATCH(":matricula", dentistaHandler.Update("patch"))
+		dentistas.DELETE(":matricula", dentistaHandler.Delete())
+	}
+	pacientes := r.Group("/pacientes")
+	{
+		pacientes.POST("", pacienteHandler.Create())
+		pacientes.GET("", pacienteHandler.GetAll())
+		pacientes.GET(":dni", pacienteHandler.GetByDni())
+		pacientes.PUT(":dni", pacienteHandler.Update("put"))
+		pacientes.PATCH(":dni", pacienteHandler.Update("patch"))
+		pacientes.DELETE(":dni", pacienteHandler.Delete())
 	}
 
 

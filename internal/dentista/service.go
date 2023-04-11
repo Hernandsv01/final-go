@@ -41,14 +41,14 @@ func (s *service) Read(matricula int) (domain.Dentista, error) {
 
 func (s *service) Update(matricula string, d domain.Dentista, functionType string) error {
 	matInt, err := strconv.Atoi(matricula)
-	if err != nil { 
+	if err != nil {
 		return err
 	}
 	d.Matricula = matInt
 
 	if functionType == "put" {
 		return s.r.Put(d)
-	}else if functionType == "patch" {
+	} else if functionType == "patch" {
 		return s.r.Patch(d)
 	} else {
 		return fmt.Errorf("Something went VERY wrong, contact developer")

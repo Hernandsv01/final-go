@@ -64,7 +64,6 @@ func (h *dentistaHandler) GetByMatricula() gin.HandlerFunc {
 }
 
 func (h *dentistaHandler) Update(functionType string) gin.HandlerFunc {
-	
 	return func(c *gin.Context) {
 		var d domain.Dentista
 		if err := c.ShouldBindJSON(&d); err != nil {
@@ -100,4 +99,3 @@ func (h *dentistaHandler) Delete() gin.HandlerFunc {
 		c.JSON(http.StatusOK, "Dentista deleted succesfully")
 	}
 }
-
