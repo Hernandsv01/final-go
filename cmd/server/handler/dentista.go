@@ -129,7 +129,19 @@ func (h *dentistaHandler) Update(functionType string) gin.HandlerFunc {
 
 func (h *dentistaHandler) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		
+		matricula := c.Param("matricula")
+		matriculaInt, err := strconv.Atoi(matricula)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid matricula"})
+			return
+		}
+		err = h.s.Delete(matriculaInt)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, "Dentista deleted succesfully")
 	}
 }
 
