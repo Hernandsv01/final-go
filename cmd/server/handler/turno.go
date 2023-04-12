@@ -25,7 +25,7 @@ func (h *turnoHandler) Create() gin.HandlerFunc {
 		var t domain.Turno
 
 		if err := c.ShouldBindJSON(&t); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Estructura inválida de turno"})
 			return
 		}
 
@@ -34,7 +34,7 @@ func (h *turnoHandler) Create() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusCreated, "Turno creado de forma exitosa")
+		c.JSON(http.StatusCreated, "Turno creado exitosamente")
 	}
 }
 
@@ -49,7 +49,7 @@ func (h *turnoHandler) GetById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "id inválido"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 			return
 		}
 		res, err := h.s.Read(id)
@@ -67,7 +67,7 @@ func (h *turnoHandler) GetByDni() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("dni"))
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "dni inválido"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "DNI inválido"})
 			return
 		}
 		res, err := h.s.GetByDni(id)
@@ -84,7 +84,7 @@ func (h *turnoHandler) Update(functionType string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var t domain.Turno
 		if err := c.ShouldBindJSON(&t); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Estructura inválida de turno"})
 			return
 		}
 		
@@ -104,7 +104,7 @@ func (h *turnoHandler) Delete() gin.HandlerFunc {
 		id := c.Param("id")
 		idInt, err := strconv.Atoi(id)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
 			return
 		}
 		err = h.s.Delete(idInt)

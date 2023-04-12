@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Hernandsv01/final-go.git/internal/domain"
+	"github.com/go-sql-driver/mysql"
 )
 
 type dentistaSqlStore struct {
@@ -75,7 +76,7 @@ func (s *dentistaSqlStore) Read(matricula int) (domain.Dentista, error) {
 
 		return dentistaRes, nil
 	} else {
-		return dentistaRes, fmt.Errorf("Dentista not found: matricula=%d", matricula)
+		return dentistaRes, fmt.Errorf("No se pudo encontrar un dentista con matrícula: %d", matricula)
 	}
 }
 
@@ -91,7 +92,7 @@ func (s *dentistaSqlStore) UpdateFull(d domain.Dentista) error {
 	}
 	rowsAff, _ := res.RowsAffected()
 	if rowsAff == 0 {
-		return fmt.Errorf("No dentista with that matricula was found")
+		return fmt.Errorf("No se pudo encontrar un dentista con matrícula: %d", d.Matricula)
 	}
 
 	st.Close()
@@ -101,10 +102,9 @@ func (s *dentistaSqlStore) UpdateFull(d domain.Dentista) error {
 // Update actualiza un Dentista
 func (s *dentistaSqlStore) Update(d domain.Dentista) error {
 	if d.Apellido == "" && d.Nombre == "" {
-		return fmt.Errorf("New dentista is empty")
+		return fmt.Errorf("El nuevo dentista está vacío")
 	}
 
-	var algoDiferente bool = false
 	/*
 	  Apellido y nombre fueron puestos así porque
 	  no se me ocurría forma de meterlos en el exec condicionalmente
@@ -113,17 +113,12 @@ func (s *dentistaSqlStore) Update(d domain.Dentista) error {
 	statement := "UPDATE dentista SET"
 	if d.Apellido != "" {
 		statement += " apellido=\"" + d.Apellido + "\""
-		algoDiferente = true
 	}
 	if d.Nombre != "" {
 		statement += " nombre=\"" + d.Nombre + "\""
-		algoDiferente = true
 	}
 	statement += " WHERE matricula=?"
 
-	if !algoDiferente {
-		return fmt.Errorf("No hay nada que cambiar en esta update")
-	}
 	st, err := s.db.Prepare(statement)
 	if err != nil {
 		return err
@@ -134,7 +129,7 @@ func (s *dentistaSqlStore) Update(d domain.Dentista) error {
 	}
 	rowsAff, _ := res.RowsAffected()
 	if rowsAff == 0 {
-		return fmt.Errorf("No dentista with that matricula was found")
+		return fmt.Errorf("No se pudo encontrar un dentista con matrícula: %d", d.Matricula)
 	}
 
 	st.Close()
@@ -149,11 +144,16 @@ func (s *dentistaSqlStore) Delete(matricula int) error {
 	}
 	res, err := st.Exec(matricula)
 	if err != nil {
+		if mysqlError, ok := err.(*mysql.MySQLError); ok {
+			if mysqlError.Number == 1451 {
+				return fmt.Errorf("No se puede borrar un dentista que tiene turnos asignados")
+			}
+		}
 		return err
 	}
 	rowsAff, _ := res.RowsAffected()
 	if rowsAff == 0 {
-		return fmt.Errorf("No dentista with that matricula was found")
+		return fmt.Errorf("No se pudo encontrar un dentista con matrícula: %d", matricula)
 	}
 
 	st.Close()
@@ -252,7 +252,7 @@ func (s *pacienteSqlStore) Read(dni int) (domain.Paciente, error) {
 
 		return pacienteRes, nil
 	} else {
-		return pacienteRes, fmt.Errorf("Paciente not found: dni=%d", dni)
+		return pacienteRes, fmt.Errorf("No se pudo encontrar un paciente con DNI: %d", dni)
 	}
 }
 
@@ -268,7 +268,7 @@ func (s *pacienteSqlStore) UpdateFull(d domain.Paciente) error {
 	}
 	rowsAff, _ := res.RowsAffected()
 	if rowsAff == 0 {
-		return fmt.Errorf("No paciente with that dni was found")
+		return fmt.Errorf("No se pudo encontrar un paciente con DNI: %d", d.DNI)
 	}
 
 	st.Close()
@@ -278,7 +278,7 @@ func (s *pacienteSqlStore) UpdateFull(d domain.Paciente) error {
 // Update actualiza un Paciente
 func (s *pacienteSqlStore) Update(d domain.Paciente) error {
 	if d.Apellido == "" && d.Nombre == "" {
-		return fmt.Errorf("New paciente is empty")
+		return fmt.Errorf("El nuevo paciente está vacío")
 	}
 
 	var algoDiferente bool = false
@@ -320,7 +320,7 @@ func (s *pacienteSqlStore) Update(d domain.Paciente) error {
 	}
 	rowsAff, _ := res.RowsAffected()
 	if rowsAff == 0 {
-		return fmt.Errorf("No paciente with that dni was found")
+		return fmt.Errorf("No se pudo encontrar un paciente con DNI: %d", d.DNI)
 	}
 
 	st.Close()
@@ -335,11 +335,16 @@ func (s *pacienteSqlStore) Delete(dni int) error {
 	}
 	res, err := st.Exec(dni)
 	if err != nil {
+		if mysqlError, ok := err.(*mysql.MySQLError); ok {
+			if mysqlError.Number == 1451 {
+				return fmt.Errorf("No se puede borrar un paciente que tiene turnos asignados")
+			}
+		}
 		return err
 	}
 	rowsAff, _ := res.RowsAffected()
 	if rowsAff == 0 {
-		return fmt.Errorf("No paciente with that dni was found")
+		return fmt.Errorf("No se pudo encontrar un paciente con DNI: %d", dni)
 	}
 
 	st.Close()
@@ -567,11 +572,11 @@ func (s *turnoSqlStore) Exists(id int) bool {
 	}
 }
 
-func (s *turnoSqlStore) GetByDni(dni int) ([]domain.Turno, error){
+func (s *turnoSqlStore) GetByDni(dni int) ([]domain.Turno, error) {
 	if !NewPacienteSqlStore(s.db).Exists(dni) {
 		return nil, fmt.Errorf("No se pudo encontrar un paciente con ese dni")
 	}
-	
+
 	turnosList := make([]domain.Turno, 0)
 
 	rows, err := s.db.Query("SELECT t.id, t.fecha_hora, t.descripcion, p.dni, p.apellido, p.nombre, p.domicilio, p.fecha_alta, d.matricula, d.apellido, d.nombre FROM turno t INNER JOIN paciente p ON t.paciente_dni=p.dni INNER JOIN dentista d ON t.dentista_matricula=d.matricula")

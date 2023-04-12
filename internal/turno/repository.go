@@ -25,30 +25,16 @@ func NewRepository(storage store.TurnoStoreInterface) Repository {
 }
 
 func (r *repository) Create(t domain.Turno) error {
-	err := r.storage.Create(t)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return r.storage.Create(t)
 }
 
 func (r *repository) GetAll() []domain.Turno {
-	resList, err := r.storage.ReadAll()
-	if err != nil {
-		return make([]domain.Turno, 0)
-	}
-
-	return resList
+	turnoList, _ := r.storage.ReadAll()
+	return turnoList
 }
 
 func (r *repository) Get(id int) (domain.Turno, error) {
-	res, err := r.storage.Read(id)
-	if err != nil {
-		return domain.Turno{}, err
-	}
-
-	return res, nil
+	return r.storage.Read(id)
 }
 
 func (r *repository) Put(t domain.Turno) error {

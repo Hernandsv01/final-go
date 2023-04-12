@@ -29,19 +29,13 @@ func NewService(r Repository, sd dentista.Service, sp paciente.Service) Service 
 }
 
 func (s *service) Create(t domain.Turno) error {
-	/*
-		Verificar que estén los campos obligatorios
-		Verificar que el dni exista
-		Verificar que la matricula exista
-		Crear
-	*/
 	if t.Dentista.Matricula == 0 || t.Paciente.DNI == 0 {
 		return fmt.Errorf("Se necesita que estén tanto la matricula del dentista como el dni del paciente para crear un turno")
 	}
 	todoCorrectoDentista := s.sd.Exists(t.Dentista.Matricula)
 	todoCorrectoPaciente := s.sp.Exists(t.Paciente.DNI)
 	if !todoCorrectoDentista || !todoCorrectoPaciente {
-		return fmt.Errorf("No existe ningún paciente o ningún dentista con esos datos (Service): %v %v", todoCorrectoDentista, todoCorrectoPaciente)
+		return fmt.Errorf("No existe ningún paciente o ningún dentista con esos datos")
 	}
 
 	err := s.r.Create(t)

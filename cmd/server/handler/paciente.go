@@ -25,7 +25,7 @@ func (h *pacienteHandler) Create() gin.HandlerFunc {
 		var p domain.Paciente
 
 		if err := c.ShouldBindJSON(&p); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Estructura inválida de paciente"})
 			return
 		}
 
@@ -49,12 +49,12 @@ func (h *pacienteHandler) GetByDni() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		dni, err := strconv.Atoi(c.Param("dni"))
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid dni"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "DNI inaválido"})
 			return
 		}
 		res, err := h.s.Read(dni)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "The specified dni could not be found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "No se pudo encontrar un paciente con ese DNI"})
 			return
 		}
 
@@ -68,7 +68,7 @@ func (h *pacienteHandler) Update(functionType string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var p domain.Paciente
 		if err := c.ShouldBindJSON(&p); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Estructura inválida de paciente"})
 			return
 		}
 		dni := c.Param("dni")
@@ -79,7 +79,7 @@ func (h *pacienteHandler) Update(functionType string) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, "Paciente updated succesfully")
+		c.JSON(http.StatusOK, "Paciente actualizado exitosamente")
 	}
 }
 
@@ -88,7 +88,7 @@ func (h *pacienteHandler) Delete() gin.HandlerFunc {
 		dni := c.Param("dni")
 		dniInt, err := strconv.Atoi(dni)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid dni"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "DNI inválido"})
 			return
 		}
 		err = h.s.Delete(dniInt)
@@ -97,6 +97,6 @@ func (h *pacienteHandler) Delete() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, "Paciente deleted succesfully")
+		c.JSON(http.StatusOK, "Paciente borrado exitosamente")
 	}
 }

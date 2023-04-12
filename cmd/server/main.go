@@ -60,7 +60,6 @@ func main() {
 		turnos.DELETE(":id", turnoHandler.Delete())
 		turnos.PUT(":id", turnoHandler.Update("put"))
 		turnos.PATCH(":id", turnoHandler.Update("patch"))
-		
 		turnos.GET("/paciente/:dni", turnoHandler.GetByDni())
 	}
 	

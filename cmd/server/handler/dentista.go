@@ -25,7 +25,7 @@ func (h *dentistaHandler) Create() gin.HandlerFunc {
 		var d domain.Dentista
 
 		if err := c.ShouldBindJSON(&d); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Estructura inválida de dentista"})
 			return
 		}
 
@@ -49,12 +49,12 @@ func (h *dentistaHandler) GetByMatricula() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		matricula, err := strconv.Atoi(c.Param("matricula"))
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid matricula"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Matrícula inválida"})
 			return
 		}
 		res, err := h.s.Read(matricula)
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{"error": "The specified matricula could not be found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -67,7 +67,7 @@ func (h *dentistaHandler) Update(functionType string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var d domain.Dentista
 		if err := c.ShouldBindJSON(&d); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Estructura inválida de dentista"})
 			return
 		}
 		matricula := c.Param("matricula")
