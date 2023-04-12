@@ -12,6 +12,7 @@ type Repository interface {
 	Patch(d domain.Dentista) error
 	Put(d domain.Dentista) error
 	Delete(matricula int) error
+	Exists(matricula int) bool
 }
 
 type repository struct {
@@ -60,4 +61,8 @@ func (r *repository) Patch(d domain.Dentista) error {
 
 func (r *repository) Delete(matricula int) error {
 	return r.storage.Delete(matricula)
+}
+
+func (r *repository) Exists(matricula int) bool {
+	return r.storage.Exists(matricula)
 }

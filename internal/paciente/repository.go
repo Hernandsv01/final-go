@@ -12,6 +12,7 @@ type Repository interface {
 	Patch(d domain.Paciente) error
 	Put(d domain.Paciente) error
 	Delete(dni int) error
+	Exists(dni int) bool
 }
 
 type repository struct {
@@ -60,4 +61,8 @@ func (r *repository) Patch(d domain.Paciente) error {
 
 func (r *repository) Delete(dni int) error {
 	return r.storage.Delete(dni)
+}
+
+func (r *repository) Exists(dni int) bool {
+	return r.storage.Exists(dni)
 }

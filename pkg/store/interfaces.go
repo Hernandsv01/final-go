@@ -8,15 +8,15 @@ type DentistaStoreInterface interface {
 	// Readall devuelve una lista con todos los dentistas
 	ReadAll() ([]domain.Dentista, error)
 	// Create agrega un nuevo Dentista
-	Create(product domain.Dentista) error
+	Create(d domain.Dentista) error
 	// Update actualiza un Dentista
-	Update(product domain.Dentista) error
+	Update(d domain.Dentista) error
 	// Update actualiza un Dentista en su totalidad
-	UpdateFull(product domain.Dentista) error
+	UpdateFull(d domain.Dentista) error
 	// Delete elimina un Dentista
 	Delete(id int) error
 	// Exists verifica si un Dentista existe
-	// Exists(codeValue string) bool
+	Exists(matricula int) bool
 }
 
 type PacienteStoreInterface interface {
@@ -25,15 +25,15 @@ type PacienteStoreInterface interface {
 	// Readall devuelve una lista con todos los Pacientes
 	ReadAll() ([]domain.Paciente, error)
 	// Create agrega un nuevo Paciente
-	Create(product domain.Paciente) error
+	Create(p domain.Paciente) error
 	// Update actualiza un Paciente
-	Update(product domain.Paciente) error
+	Update(p domain.Paciente) error
 	// Update actualiza un Dentista en su totalidad
-	UpdateFull(product domain.Paciente) error
+	UpdateFull(p domain.Paciente) error
 	// Delete elimina un Paciente
 	Delete(id int) error
 	// Exists verifica si un Paciente existe
-	// Exists(codeValue string) bool
+	Exists(dni int) bool
 }
 
 type TurnoStoreInterface interface {
@@ -42,11 +42,13 @@ type TurnoStoreInterface interface {
 	// Readall devuelve una lista con todos los Turnos
 	ReadAll() ([]domain.Turno, error)
 	// Create agrega un nuevo Turno
-	Create(product domain.Turno) error
+	Create(t domain.Turno) error
 	// Update actualiza un Turno
-	Update(product domain.Turno) error
+	Update(t domain.Turno) error
+	// Update actualiza un Dentista en su totalidad
+	UpdateFull(p domain.Turno) error
 	// Delete elimina un Turno
 	Delete(id int) error
-	// Exists verifica si un Turno existe
-	Exists(codeValue string) bool
+	// GetByDni devuelve una lista con todos los turnos de un paciente
+	GetByDni(dni int) ([]domain.Turno, error)
 }

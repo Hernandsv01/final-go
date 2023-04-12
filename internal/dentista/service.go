@@ -13,6 +13,7 @@ type Service interface {
 	Read(matricula int) (domain.Dentista, error)
 	Update(matricula string, d domain.Dentista, functionType string) error
 	Delete(matricula int) error
+	Exists(matricula int) bool
 }
 
 type service struct {
@@ -58,4 +59,8 @@ func (s *service) Update(matricula string, d domain.Dentista, functionType strin
 func (s *service) Delete(matricula int) error {
 	err := s.r.Delete(matricula)
 	return err
+}
+
+func (s *service) Exists(matricula int) bool {
+	return s.r.Exists(matricula)
 }

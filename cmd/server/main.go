@@ -7,6 +7,7 @@ import (
 	"github.com/Hernandsv01/final-go.git/cmd/server/handler"
 	"github.com/Hernandsv01/final-go.git/internal/dentista"
 	"github.com/Hernandsv01/final-go.git/internal/paciente"
+	"github.com/Hernandsv01/final-go.git/internal/turno"
 	"github.com/Hernandsv01/final-go.git/pkg/store"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -26,7 +27,11 @@ func main() {
 
 	dentistaHandler := handler.NewDentistaHandler(dentista.NewService(dentista.NewRepository(store.NewDentistaSqlStore(db))))
 	pacienteHandler := handler.NewPacienteHandler(paciente.NewService(paciente.NewRepository(store.NewPacienteSqlStore(db))))
-	// turnoHandler := handler.NewTurnoHandler(turno.NewService(turno.NewRepository(store.NewTurnoSqlStore(db))))
+	turnoHandler := handler.NewTurnoHandler(turno.NewService(
+		turno.NewRepository(store.NewTurnoSqlStore(db)),
+		dentista.NewService(dentista.NewRepository(store.NewDentistaSqlStore(db))),
+		paciente.NewService(paciente.NewRepository(store.NewPacienteSqlStore(db))),
+		))
 
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 	dentistas := r.Group("/dentistas")
@@ -47,8 +52,17 @@ func main() {
 		pacientes.PATCH(":dni", pacienteHandler.Update("patch"))
 		pacientes.DELETE(":dni", pacienteHandler.Delete())
 	}
-
-
+	turnos := r.Group("/turnos")
+	{
+		turnos.POST("", turnoHandler.Create())
+		turnos.GET("", turnoHandler.GetAll())
+		turnos.GET(":id", turnoHandler.GetById())
+		turnos.DELETE(":id", turnoHandler.Delete())
+		turnos.PUT(":id", turnoHandler.Update("put"))
+		turnos.PATCH(":id", turnoHandler.Update("patch"))
+		
+		turnos.GET("/paciente/:dni", turnoHandler.GetByDni())
+	}
 	
 	r.Run(":8080")
 }
